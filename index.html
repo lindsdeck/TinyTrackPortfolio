@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="TinyTrack childcare enrollment management project by Lindsey DeDecker.">
+
+    <title>TinyTrack | Lindsey DeDecker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>TinyTrack</h1>
+            <p>Childcare Enrollment Management System</p>
+            <p class="author">Developed by Lindsey DeDecker</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>About the Project</h2>
+            <p>
+                TinyTrack is a web-based application that helps childcare
+                administrators manage student enrollment, have real time knowledge of classroom openings,
+                and future enrollment projections.
+            </p>
+            <p>
+                This project was inspired by my experience in childcare administration. TinyTrack is solving the problem of manually tracking
+                this data in notebooks and spreadsheets. I am hopeful that this will be able to support administrators and make the process
+                more efficient with less errors. 
+                        </p>
+        </section>
+        <section>
+    <h2>Application Features</h2>
+
+    <div class="features">
+        <article class="feature">
+            <h3>Student Management</h3>
+            <p>
+                Add, edit, search, and inactivate student records.
+                Maintain birthdates, enrollment dates, and classroom assignments.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Classroom Management</h3>
+            <p>
+                Manage classroom age ranges, and licensed capacities.
+                Review current enrollment and available openings.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Future Enrollment Projections</h3>
+            <p>
+                Select a future date to calculate classroom placement
+                using student ages, enrollment dates, departure dates,
+                and classroom capacity.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Month to Month Planning</h3>
+            <p>
+                Review projected classroom rosters, approaching transitions,
+                capacity holds, upcoming starts, and students needing review.
+            </p>
+        </article>
+    </div>
+</section>
+<section>
+    <h2>Application Screenshots</h2>
+    <p>These screenshots show TinyTrack using fictional sample data.</p>
+
+    <figure class="screenshot">
+        <img
+            src="images/dashboard.png"
+            alt="TinyTrack dashboard showing enrollment totals and classroom openings."
+            loading="lazy"
+        >
+        <figcaption>
+            The dashboard summarizes current enrollment, active classrooms,
+            licensed capacity, and available openings. From the dashboard users
+            are also able to navigate through the website to different pages.
+        </figcaption>
+    </figure>
+
+    <figure class="screenshot">
+        <img
+            src="images/month-to-month.png"
+            alt="Projected classroom rosters with transition indicators,
+                 capacity holds, and upcoming enrollment starts."
+            loading="lazy"
+        >
+        <figcaption>
+            The Month to Month view displays projected classroom rosters
+            and highlights approaching transitions, capacity holds,
+            and upcoming starts. This view allows the user to see the entire picture
+            while also being able to have quick understanding of the important information.
+        </figcaption>
+    </figure>
+</section>
+
+<section>
+    <h2>Technical Design</h2>
+
+    <p>
+        TinyTrack uses a layered architecture to separate the user
+        interface, enrollment logic, and database operations.
+    </p>
+
+    <div class="features">
+        <article class="feature">
+            <h3>Presentation</h3>
+            <p>
+                Thymeleaf, HTML, and CSS display the dashboard,
+                forms, student records, and classroom projections.
+                Spring MVC controllers handle browser requests.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Business Logic</h3>
+            <p>
+                Java services manage records and calculations.
+                The enrollment projection engine uses student ages,
+                start dates, departure dates, and classroom capacities
+                to calculate future placements.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Data Access and Storage</h3>
+            <p>
+                Spring Data JPA repositories retrieve and save
+                information in MySQL. The database stores centers,
+                classrooms, and student records.
+            </p>
+        </article>
+
+        <article class="feature">
+            <h3>Database Relationships</h3>
+            <p>
+                Each classroom belongs to a center, and each student
+                record references a classroom. Foreign keys connect
+                these records in the relational database.
+            </p>
+        </article>
+    </div>
+</section>
+<section>
+  <h2>Code Highlight: Enrollment Projection Status</h2>
+
+  <p>
+    TinyTrack compares a student's age-eligible classroom with their
+    projected classroom assignment. This method identifies students
+    held for capacity, promoted to an older classroom, or assigned
+    normally.
+  </p>
+
+  <pre><code>private ProjectionStatus determineProjectionStatus(
+        Student student,
+        Classroom ageEligibleClassroom,
+        Classroom assignedClassroom) {
+
+    if (!assignedClassroom.getId().equals(
+            ageEligibleClassroom.getId())) {
+        return ProjectionStatus.HELD_FOR_CAPACITY;
+    }
+
+    Classroom currentClassroom = student.getClassroom();
+
+    if (currentClassroom != null
+            &amp;&amp; assignedClassroom.getMinimumAgeMonths()
+                &gt; currentClassroom.getMinimumAgeMonths()) {
+        return ProjectionStatus.PROMOTED;
+    }
+
+    return ProjectionStatus.NORMAL;
+}</code></pre>
+
+  <p>
+    These statuses help administrators identify classroom transitions
+    and capacity restrictions when looking ahead to future enrolllment. 
+  </p>
+</section>
+
+<section>
+  <h2>How to Run TinyTrack</h2>
+
+  <p>
+    TinyTrack runs locally using Java 21, Spring Boot, and MySQL.
+    This portfolio presents the project; the application runs separately.
+  </p>
+
+  <ol>
+    <li>Download or clone the project repository.</li>
+    <li>Install Java 21 and MySQL.</li>
+    <li>Create a MySQL database named <code>childcare_enrollment</code>.</li>
+    <li>
+      Update <code>src/main/resources/application.properties</code>
+      with your local database connection settings.
+    </li>
+    <li>
+      Open a terminal in the application folder and run
+      <code>.\mvnw.cmd spring-boot:run</code> on Windows.
+    </li>
+    <li>
+      Open <code>http://localhost:8080</code> in your browser.
+    </li>
+  </ol>
+
+  <p>
+    Demonstration screenshots use fictional student information.
+  </p>
+</section>
+<section>
+  <h2>Project Documents</h2>
+
+  <ul>
+    <li>
+      <a href="documents/finalReport.pdf"
+         target="_blank" rel="noopener">
+        View the Final Project Report
+      </a>
+    </li>
+    <li>
+      <a href="documents/poster.pdf"
+         target="_blank" rel="noopener">
+        View the Project Poster
+      </a>
+    </li>
+  </ul>
+</section>
+<section>
+  <h2>Project Reflection</h2>
+
+  <p>
+    Developing TinyTrack has allowed me to connect my childcare administration
+    experience along with my software development skills. Being able to
+     use my knowledge to solve a real world problem that effects myself and my 
+     colleagues has been invaluable. The main challend with this project
+     was creating classroom assignements for the future while taking into 
+     account all of the relational data.
+  </p>
+
+  <p>
+    The completed application brings student enrollment records into one
+    area that also allows for administrations to look at the future when
+    planning for enrollment. Future improvements could include
+    administrator authentication, report exports, and additional
+    automated testing.
+  </p>
+</section>
+
+<section id="demo" class="project-section">
+  <h2>Project Demonstration</h2>
+
+  <p>
+    Watch a walkthrough of TinyTrack, including its
+    main features, enrollment management tools,
+    and development process.
+  </p>
+
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/uGvw82XP_K8"
+      title="TinyTrack Final Project Demonstration"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <p>
+    <a href="https://youtu.be/uGvw82XP_K8"
+       target="_blank"
+       rel="noopener noreferrer">
+      Click here to watch the presentation on YouTube
+    </a>
+  </p>
+</section>
+
+    </main>
+
+    <footer>
+        <p>Lindsey DeDecker | Grand Canyon University | Software Development</p>
+    </footer>
+</body>
+</html>
